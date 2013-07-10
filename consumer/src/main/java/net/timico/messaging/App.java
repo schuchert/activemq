@@ -20,7 +20,7 @@ public class App implements MessageListener
     private Connection connection;
     private Session session;
     private MessageConsumer consumer;
-    private boolean justStarted = true;
+    private volatile boolean shutdown = false;
  
     public static void main( String[] args )
     {
@@ -30,8 +30,7 @@ public class App implements MessageListener
  
     public void run()
     {
-        try
-        {
+        try {
             ConnectionFactory factory = new ActiveMQConnectionFactory(brokerURL);
             connection = factory.createConnection();
             connection.start();
@@ -39,9 +38,12 @@ public class App implements MessageListener
             Destination destination = session.createQueue("test");
             consumer = session.createConsumer(destination);
             consumer.setMessageListener(this);
+            while(!shutdown) {
+                Thread.sleep(1000);
+            }
+            System.exit(0);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             System.out.println("Caught:" + e);
             e.printStackTrace();
         }
@@ -54,15 +56,14 @@ public class App implements MessageListener
             if (message instanceof TextMessage)
             {
                 TextMessage txtMessage = (TextMessage)message;
-                System.out.println("Message received: " + txtMessage.getText());
-                if("terminate".equals(txtMessage.getText())) {
-                    if(justStarted) {
-                        System.out.println("ignoring terminate from last shutdown");
-                        justStarted = false;
-                    } else {
-                        System.out.println("Shutting down");
-                        System.exit(0);
-                    }
+                String body = txtMessage.getText();
+                if(!body.startsWith("=")) {
+                    System.out.printf("Message received: ");
+                }
+                System.out.println(body);
+                if("terminate".equals(body)) {
+                    System.out.println("Shutting down");
+                    shutdown = true;
                 }
             }
             else

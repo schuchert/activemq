@@ -15,4 +15,5 @@ To use:
 You can continue to execute produce.sh. When you want to stop the madness,
 you can hit ^c in consumer and mq shells.
 
-Alternatively, you can try using end.sh in the producer directory.
+Alternatively, you can use end.sh in the producer directory and hit ^c
+in the mq directory.
