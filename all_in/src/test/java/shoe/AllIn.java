@@ -29,7 +29,19 @@ public class AllIn {
     @Test
     public void smoke() throws Exception {
         produce();
+        consume();
+        waitForConsumptionToComplete();
 
+        assertThat(messagesReceived, is(MESSAGES_TO_SEND + 1));
+    }
+
+    private void waitForConsumptionToComplete() throws InterruptedException {
+        while(!shutdown) {
+            Thread.sleep(10);
+        }
+    }
+
+    private void consume() throws JMSException {
         ConnectionFactory factory = new ActiveMQConnectionFactory(BROKER_URL);
         Connection connection = factory.createConnection();
         connection.start();
@@ -37,10 +49,6 @@ public class AllIn {
         Destination destination = session.createQueue(QUEUE_NAME);
         MessageConsumer consumer = session.createConsumer(destination);
         consumer.setMessageListener(new SimpleConsumer());
-        while(!shutdown) {
-            Thread.sleep(10);
-        }
-        assertThat(messagesReceived, is(MESSAGES_TO_SEND + 1));
     }
 
     private void produce() throws JMSException {
