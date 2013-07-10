@@ -2,4 +2,5 @@
 mq/data/localhost
 *.class
 *.jar
-
+*.idea
+all_in/activemq-data
