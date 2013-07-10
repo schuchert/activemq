@@ -1,0 +1,5 @@
+*.swp
+mq/data/localhost
+*.class
+*.jar
+

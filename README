@@ -1,0 +1,18 @@
+This is slighly adapted from:
+http://pookey.co.uk/wordpress/archives/74-playing-with-activemq-using-maven
+
+To use:
+
+0. Install Java and Maven
+1. Open three shell windows (or tabs)
+2. In one of those shells, go to the mq directory
+3. Exeucte the shell script: start_queue.sh
+4. In a second shell, go to the directory consumer
+5. Execute the shell script: consume.sh
+6. In the the third shell, go to the directory producer
+7. Execute the shell script: produce.sh
+
+You can continue to execute produce.sh. When you want to stop the madness,
+you can hit ^c in consumer and mq shells.
+
+Alternatively, you can try using end.sh in the producer directory.
